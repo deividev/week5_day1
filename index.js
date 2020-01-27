@@ -1,20 +1,19 @@
 var character = {
-    x: 0,
-    y: 0
-
+    position: {
+    x: 1,
+    y: 9
+    }
 };
-let moves;
-
+let moves = "";
 //Método que genera el grid de 10x10 y lo retorna.
 function generateMap() {
     let grid = [];
     // TODO debes generar el array de 2D, rellenalo de 0
     for (let i = 0; i < 10; i++) {
-        grid[i] = [0,0,0,0,0,0,0,0,0,0,];
-        
+        grid[i] = [0,0,0,0,0,0,0,0,0,0,]; 
     }
     //TODO Actualiza el array llamando al método generateObstacles para poner obstaculos aleatorios en el grid
-    grid = generateObstacles(grid)
+    generateObstacles(grid)
     
     return grid;
 }
@@ -25,18 +24,19 @@ function generateObstacles(grid) {
     // Puedes generar la aleatoriedad con Math.floor(Math.random() * 5) + 1, este método devuelve un entero del 51 al 5,
     // podemos por ejemplo, asignar valor 1 en las celdas del grid en el que math.random devuelva menos de 2. 40% posibilidades.
    
-    for (let i = 0; i < grid.length; i++) {
-        let obstaculos = grid[i];
-        let random = Math.floor(Math.random() * 5) + 1;
-        if(random < 2){
-            obstaculos[i] = 1;
-            console.log(obstaculos);
+    for(let i = 0; i < grid.length; i++) {
+        let row = grid[i];
+        for(let j = 0; j < row.length; j++) {
+            let random = Math.floor(Math.random() * 5) + 1;
+            if(random < 2) {
+                row[j] = 1;
+            }
         }
     }
-   
-    console.log(grid);
     return grid;
 }
+
+
 
 
 
@@ -88,43 +88,53 @@ function checkInstructions() {
             moveWest();
             break;
         default:
-            
+            alert("");
     }    
 
     // Al finalizar todas las llamadas, debe pintar el mapa de nuevo para ver la última posición del personaje
     printMap(map, character);
 }
-
 // Función que mueve al personaje hacia el norte.
 function moveNorth() {
-    let YcordNegative  = character.position.y - 1;
-    return checkObstacle(character.position.x, YcordNegative);
+    // const yCoord = character.position.y - 1;
+    // return checkObstacle(character.position.x, yCoord);
+    if (checkObstacle(character.position.x, character.position.y - 1) === '') {
+        character.position.y -= 1;
+    }
 }
 // Función que mueve al personaje hacia el sur
 function moveSouth() {
-    let YcordPlus =  character.position.y + 1;
-    return checkObstacle(character.position.x, YcordPlus);
+    if (checkObstacle(character.position.x, character.position.y + 1) === '') {
+        character.position.y += 1;
+    }
 }
-// Función que mueve al character hacia el este
+// Función que mueve al personaje hacia el este
 function moveEast() {
-    let XcordPlus =  character.position.x + 1;
-    return checkObstacle(character.position.x, XcordPlus);
+    if (checkObstacle(character.position.y, character.position.x + 1) === '') {
+        character.position.x += 1;
+    }
 }
-//Función que mueve el character hacia el oeste
+//Función que mueve el personaje hacia el oeste
 function moveWest() {
-    let XcordNegative =  character.position.x - 1;
-    return checkObstacle(character.position.x, XcordNegative);
+    if (checkObstacle(character.position.y, character.position.x - 1) === '') {
+        character.position.x -= 1;
+    }
 }
 // Función que comprueba, dadas las coordenadas del personaje, si existe un obstaculo (valor 1) en esa celda del array
-
 function checkObstacle(x, y) {
-    return map[y][x] === 1;
+    let error = '';
+    if(y > 9 || x > 9 || y < 0 || x < 0) {
+        error = 'Fuera del Mapa!';
+        alert(error);
+    } else if(map[y][x] === 1) {
+        error = 'Hay un obstáculo!';
+        alert(error);
+    }
+    return error;
 }
-
 // El boton dar instrucciones pide una secuencia de comandos a ejecutar.
 // La secuencia se almacena en la variable movimientos.
 // Al darle al boton comprobar instrucciones, se comprobaran los movimientos realizados por el personaje.
-
 console.log('Consigue que el personaje llegue a la salida!');
 console.log('Introduce la secuencia de movimientos para llegar a la casilla S');
 console.log('Los movimientos posibles son: N, S, E y O');
